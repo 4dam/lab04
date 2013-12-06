@@ -15,6 +15,7 @@ class Biblioteka //metod¹ kolekcji
 
 		//Dodaj cztery ksiazki do pierwszej biblioteki
 		pierwsza.dodajKsiazke( new Epopeja( "Pan Tadeusz", "Zaperaj¹cy dech w piersiach poemat w 12 ksiêgach wierszem pisany" ) ); // , kontrol spacja i pogrubione
+		pierwsza.dodajKsiazke( new Ksiazka( "Pan Tadeusz"));
 		pierwsza.dodajKsiazke( new KsiazkaFantastyczna( "Gra o Tron", "Tutaj ka¿dy umiera" ) );
 		pierwsza.dodajKsiazke( new Kryminal( "Tozsamosc Bourne'a", "Bourne szuka swojej to¿samoœci", 44 ) );
 		pierwsza.dodajKsiazke( new KsiazkaNaukowa( "Analiza Matematyczna", "matematyka" ) );
@@ -32,7 +33,7 @@ class Biblioteka //metod¹ kolekcji
 		//wypozycz Pana Tadeusza z obu bibliotek
 		System.out.println( "Wypozyczanie Pana Tadeusza" );
 		pierwsza.wypozyczKsiazke( "Pan Tadeusz" );
-
+		System.out.println();
 		pierwsza.wypozyczKsiazke( "Pan Tadeusz" ); //sprobuj jeszcze raz
 
 		druga.wypozyczKsiazke( "Pan Tadeusz" );
