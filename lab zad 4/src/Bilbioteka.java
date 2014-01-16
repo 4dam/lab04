@@ -29,7 +29,7 @@ class Biblioteka // metod kolekcji
 				Ksiazka k = new KsiazkaHistoryczna(tytul, autor, wydawnictwo,
 						opis);
 				pierwsza.dodajKsiazke(k);
-			//	System.out.println(k);
+				// System.out.println(k);
 			}
 			wejscie.close();
 		} catch (IOException e) {
@@ -37,6 +37,15 @@ class Biblioteka // metod kolekcji
 		}
 
 		System.out.println(pierwsza.ksiazki.size());
+		/*wypozyczam Templariusze:
+		pierwsza.wypozyczKsiazke("Templariusze");
+		pierwsza.wypozyczKsiazke("Templariusze");
+		pierwsza.wypozyczKsiazke("Templariusze");
+		pierwsza.wypozyczKsiazke("Żukow");
+		pierwsza.oddajKsiazke("Żukow");
+		pierwsza.oddajKsiazke("Żukow");
+		pierwsza.wypozyczKsiazke("pupa");
+		*/
 	}
 
 	public Biblioteka(String nazwaBiblioteki) {
@@ -64,6 +73,7 @@ class Biblioteka // metod kolekcji
 				szukana = k;
 				if (!k.czyWypozyczona()) {
 					k.wypozycz();
+					System.out.println("Udało się wypozyczć książkę " +tytul);
 					return;
 				}
 			}
@@ -80,25 +90,30 @@ class Biblioteka // metod kolekcji
 			System.out.println("Brak ksiazek w bibliotece.");
 			return;
 		}
-		for(Ksiazka k : ksiazki) {
+		for (Ksiazka k : ksiazki) {
 			System.out.println(k);
 		}
-		
 
 	}
 
 	public void oddajKsiazke(String tytul) {
 		Ksiazka szukana = null;
-		for(Ksiazka k: ksiazki) {
-			if(k.dajTytul().equals(tytul)) {
+		for (Ksiazka k : ksiazki) {
+			if (k.dajTytul().equals(tytul)) {
 				szukana = k;
-				if(k.czyWypozyczona()) {
+				if (k.czyWypozyczona()) {
 					k.oddaj();
-					System.out.println("Udało Ci sie zwrócic ksiazke: " + tytul);
+					System.out
+							.println("Udało Ci sie zwrócic ksiazke: " + tytul);
 					return;
 				}
 			}
 		}
-		
+		if (szukana == null)
+			System.out.println("Nie ma takiej książki.");
+		else
+			System.out.println("Książka o tytule " + tytul
+					+ " nie jest wypożyczona.");
+
 	}
 }
