@@ -45,6 +45,10 @@ class Ksiazka
 	{
 		return "";
 	}
+	
+	public String toString() {
+		return dajTytul() + dajOpis();
+	}
 
 	public static void main( String[] argumenty ) 
 	{

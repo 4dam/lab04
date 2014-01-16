@@ -1,112 +1,104 @@
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-class Biblioteka //metod¹ kolekcji
+class Biblioteka // metod kolekcji
 {
-	HashMap<String, Integer> ksiazki;
+	ArrayList<Ksiazka> ksiazki = new ArrayList<Ksiazka>();
 	String nazwaBiblioteki;
-	
 
-	//Dodaj implementacje odpowiednich metod
-	public static void main( String[] argumenty )
-	{
-		//Stworz dwie biblioteki
-		Biblioteka pierwsza = new Biblioteka( "Armi Krajowej 24" );
-		Biblioteka druga = new Biblioteka( "Plac Grunwaldzki 6" );
+	// Dodaj implementacje odpowiednich metod
+	public static void main(String[] argumenty) {
+		// Stworz dwie biblioteki
+		Biblioteka pierwsza = new Biblioteka("Armi Krajowej 24");
+		try {
+			// System.out.println(new java.io.File(".").getCanonicalPath());
+			BufferedReader wejscie = new BufferedReader(new FileReader(
+					"nowe_ksiazki.csv"));
+			String linia;
+			while ((linia = wejscie.readLine()) != null) {
+				StringTokenizer token = new StringTokenizer(linia, "\t");
 
-		//Dodaj cztery ksiazki do pierwszej biblioteki
-		pierwsza.dodajKsiazke( new Epopeja( "Pan Tadeusz", "Zaperaj¹cy dech w piersiach poemat w 12 ksiêgach wierszem pisany" ) ); // , kontrol spacja i pogrubione
-		pierwsza.dodajKsiazke( new Ksiazka( "Pan Tadeusz"));
-		pierwsza.dodajKsiazke( new KsiazkaFantastyczna( "Gra o Tron", "Tutaj ka¿dy umiera" ) );
-		pierwsza.dodajKsiazke( new Kryminal( "Tozsamosc Bourne'a", "Bourne szuka swojej to¿samoœci", 44 ) );
-		pierwsza.dodajKsiazke( new KsiazkaNaukowa( "Analiza Matematyczna", "matematyka" ) );
+				String tytul = token.nextToken();
+				String autor = token.nextToken();
+				String wydawnictwo = token.nextToken();
+				String opis = token.nextToken();
 
-		//Wypisz godziny urzedowania bibliotek
-		System.out.println( "Godziny otwarcia bibliotek ");
-		wypiszGodzinyOtwarcia();
-		System.out.println(); //pusta linijka
+				Ksiazka k = new KsiazkaHistoryczna(tytul, autor, wydawnictwo,
+						opis);
+				pierwsza.dodajKsiazke(k);
+			//	System.out.println(k);
+			}
+			wejscie.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		System.out.println( "Adresy bibliotek " );
-		pierwsza.wypiszAdres();
-		druga.wypiszAdres();
-		System.out.println(); //pusta linijka
-
-		//wypozycz Pana Tadeusza z obu bibliotek
-		System.out.println( "Wypozyczanie Pana Tadeusza" );
-		pierwsza.wypozyczKsiazke( "Pan Tadeusz" );
-		System.out.println();
-		pierwsza.wypozyczKsiazke( "Pan Tadeusz" ); //sprobuj jeszcze raz
-
-		druga.wypozyczKsiazke( "Pan Tadeusz" );
-
-		System.out.println(); //pusta linijka
-
-		//Wypisz dostepne tytuly w obu bibliotekach
-		System.out.println( "Ksiazki dostepne w pierwszej bibliotece" );
-		pierwsza.wypiszDostepneKsiazki();
-		System.out.println(); //pusta linijka
-		System.out.println( "Ksiazki z drugiej biblioteki" );
-		druga.wypiszDostepneKsiazki();
-		System.out.println();
-
-		// zwroc Pana Tadeusza do biblioteki
-		System.out.println( "Zwrot Pana Tadeusza" );
-		pierwsza.oddajKsiazke( "Pan Tadeusz" );
-		System.out.println();
-
-		// Wypisz tytuly dostepne w pierwszej bibliotece
-		System.out.println( "Ksiazki dostepne w pierwszej bibliotece" );
-		pierwsza.wypiszDostepneKsiazki();
+		System.out.println(pierwsza.ksiazki.size());
 	}
-	
+
 	public Biblioteka(String nazwaBiblioteki) {
-		ksiazki = new HashMap<String, Integer>(); //tworze mape ksiazek(String->Integer)
+
 		this.nazwaBiblioteki = nazwaBiblioteki;
 	}
 
 	public void dodajKsiazke(Ksiazka ksiazka) {
-		if (ksiazki.containsKey(ksiazka.tytul)){ //czy istnieje tu taka ksiazka
-			Integer ilosc = ksiazki.get(ksiazka.tytul); //zmienna ilosci ksiazek
-			ksiazki.put(ksiazka.tytul, ++ilosc); //wpisuje do mapy ze jest o 1 ksiazke wiecej
-		} else {
-			ksiazki.put(ksiazka.tytul, 1); //ustawiam ilosc ksiazek na 1
-		}
-		
+		ksiazki.add(ksiazka);
 	}
+
 	public static void wypiszGodzinyOtwarcia() {
-		System.out.println("Biblioteki sa otwarte codziennie od 9:00 do 17:00.");
+		System.out
+				.println("Biblioteki sa otwarte codziennie od 9:00 do 17:00.");
 	}
+
 	public void wypiszAdres() {
 		System.out.println(nazwaBiblioteki);
 	}
+
 	public void wypozyczKsiazke(String tytul) {
-		 if (!ksiazki.containsKey(tytul)){ //czy nie istnieje tu taka ksiazka
-			 System.out.println("Przykro nam, nie mamy takiej ksi¹¿ki.");
-			 return;
-		 }
-		 Integer ilosc = ksiazki.get(tytul);
-		// System.out.println(ilosc);
-		 if (ilosc > 0){ //czy ta ksiazka jest wypozyczona
-			 System.out.println("Uda³o siê wypo¿yczyæ Ksi¹¿kê: " + tytul);
-			 ksiazki.put(tytul, --ilosc); //wypozyczylem ksiazke
-		 } 		 
-		 else 
-			 System.out.println("Przykro nam, ksiazka jest juz wypozyczona.");
+		Ksiazka szukana = null;
+		for (Ksiazka k : ksiazki) {
+			if (k.dajTytul().equals(tytul)) {
+				szukana = k;
+				if (!k.czyWypozyczona()) {
+					k.wypozycz();
+					return;
+				}
+			}
+		}
+		if (szukana == null) {
+			System.out.println("Przykro nam, nie mamy takiej ksiÄ…Å¼ki.");
+		} else {
+			System.out.println("Przykro nam, ksiazka jest juz wypozyczona.");
+		}
 	}
+
 	public void wypiszDostepneKsiazki() {
-		if (ksiazki.isEmpty()){
+		if (ksiazki.isEmpty()) {
 			System.out.println("Brak ksiazek w bibliotece.");
 			return;
 		}
-		 for (String tytul : ksiazki.keySet()){ //przelatuje przez abcd
-			 if (ksiazki.get(tytul)>0) //pozbywam sie wypozyczonych
-				 System.out.println(tytul);
-		 }
-				
+		for(Ksiazka k : ksiazki) {
+			System.out.println(k);
+		}
+		
+
 	}
+
 	public void oddajKsiazke(String tytul) {
-		Integer ilosc = ksiazki.get(tytul); //ilosc aktualnych ksiazek
-		ksiazki.put(tytul, ++ilosc); //oddalem jedna
-		System.out.println("Uda³o Ci sie zwrócic ksiazke: " +tytul);
+		Ksiazka szukana = null;
+		for(Ksiazka k: ksiazki) {
+			if(k.dajTytul().equals(tytul)) {
+				szukana = k;
+				if(k.czyWypozyczona()) {
+					k.oddaj();
+					System.out.println("UdaÅ‚o Ci sie zwrÃ³cic ksiazke: " + tytul);
+					return;
+				}
+			}
+		}
+		
 	}
 }
-		
